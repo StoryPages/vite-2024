@@ -1,24 +1,26 @@
 import ejs from 'ejs'
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
 
-const templatePath = path.join(process.cwd(), 'views', 'index.ejs')
-
+const templatePath = path.join(process.cwd(), 'views', 'main.ejs')
 const outputPath = path.join(process.cwd(), 'index.html')
 
-fs.readFile(templatePath, 'utf-8', (err, data) => {
-	if (err) {
-		console.error('Error reading template:', err)
-		return
+async function generateHtml(data = {}) {
+	try {
+		// Чтение шаблона
+		const template = await fs.readFile(templatePath, 'utf-8')
+
+		// Рендеринг HTML
+		const html = ejs.render(template, data, { filename: templatePath })
+
+		// Запись сгенерированного HTML в файл
+		await fs.writeFile(outputPath, html)
+
+		console.log('index.html успешно сгенерирован!')
+	} catch (err) {
+		console.error('Error:', err)
 	}
+}
 
-	const html = ejs.render(data, {}, { filename: templatePath })
-
-	fs.writeFile(outputPath, html, err => {
-		if (err) {
-			console.error('Error writing index.html:', err)
-			return
-		}
-		console.log('index.html has been generated successfully!')
-	})
-})
+// Вызов функции для генерации HTML при сборке
+generateHtml()

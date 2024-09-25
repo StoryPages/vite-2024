@@ -10,27 +10,27 @@ body {
 	text-wrap: balance;
 }
 
-.container{
+.container {
 	margin: 0 auto;
 	width: 100%;
 }
 
-.flex{
+.flex {
 	display: flex;
 }
 
-.grid{
+.grid {
 	display: grid;
 }
 
-.no-scroll{
+.no-scroll {
 	overflow-y: hidden;
 }
 
-.none{
+.none {
 	display: none !important;
 }
 
 * {
 	/* outline: 1px solid green !important; */
-  }
+}

@@ -5,23 +5,26 @@ import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 import DEFAULT_OPTIONS from './imageOptimizerOptions'
 import { ViteEjsPlugin } from 'vite-plugin-ejs'
 import VitePluginSvgSpritemap from '@spiriit/vite-plugin-svg-spritemap'
+import svgoConfig from './svgo.config'
 
 export default defineConfig({
 	plugins: [
+		// Плагин для создания HTML с минимизацией
 		createHtmlPlugin({
 			minify: true,
 		}),
+		// Плагин для оптимизации изображений
 		ViteImageOptimizer(DEFAULT_OPTIONS),
-
+		// Плагин для создания SVG-спрайтов
 		VitePluginSvgSpritemap('public/svg/**/*.svg', {
 			svgSpriteConfig: {
 				shape: {
 					transform: ['svgo'],
 				},
 			},
-			svgConfig: require('./svgo.config'),
+			svgConfig: svgoConfig,
 		}),
-
+		// Плагин для статического копирования файлов
 		viteStaticCopy({
 			targets: [
 				{
@@ -30,10 +33,13 @@ export default defineConfig({
 				},
 			],
 		}),
+		// Плагин для работы с EJS
 		ViteEjsPlugin(),
 	],
 
 	server: {
+		host: '0.0.0.0',
+		port: 3000,
 		watch: {
 			paths: ['views/**/*.ejs'],
 		},
@@ -45,6 +51,7 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				assetFileNames: assetInfo => {
+					// Настройка имен файлов для SVG
 					if (assetInfo.name.endsWith('.svg')) {
 						return 'assets/svg/[name]-[hash][extname]'
 					}
